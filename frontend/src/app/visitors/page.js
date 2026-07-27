@@ -123,17 +123,22 @@ export default function VisitorsPage() {
   };
 
   const handleSignOut = async (visitorId) => {
+    if (!visitorId) {
+      toast.error('Invalid visitor selection');
+      return;
+    }
+
     setSigningOut(true);
     try {
       const { data } = await api.put(`/visitors/${visitorId}/signout`, {
         signOutTime: new Date().toISOString(),
         signedOutBy: user.id,
       });
-      toast.success(`Visitor signed out successfully`);
+      toast.success(data.message || 'Visitor signed out successfully');
       setShowSignOutModal(null);
       fetchVisitors();
     } catch (error) {
-      toast.error('Failed to sign out visitor');
+      toast.error(error.response?.data?.message || 'Failed to sign out visitor');
     } finally {
       setSigningOut(false);
     }
