@@ -127,7 +127,8 @@ router.put('/:id/signout', protect, authorize('guard', 'admin', 'super_admin'), 
     }
 
     if (visitor.status === 'outside') {
-      return res.status(400).json({ message: 'Visitor already signed out' });
+      await visitor.populate('signedOutBy', 'name email');
+      return res.json({ message: 'Visitor already signed out', visitor });
     }
 
     visitor.status = 'outside';
