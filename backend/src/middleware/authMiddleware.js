@@ -82,6 +82,7 @@ export const protect = async (req, res, next) => {
   req.userId = user._id;
 
   next();
+};
 
 /**
  * Authorize middleware - Restricts access based on user roles
