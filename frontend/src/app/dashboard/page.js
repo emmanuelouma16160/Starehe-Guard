@@ -298,7 +298,7 @@ export default function DashboardPage() {
           {
             title: 'Generate Report',
             description: 'Create a new security report',
-            href: '/reports',
+            href: '/dashboard/reports',
             icon: FileText,
             color: '#F59E0B',
             bg: 'rgba(245, 158, 11, 0.1)',
@@ -306,7 +306,7 @@ export default function DashboardPage() {
           {
             title: 'Lockdown Status',
             description: 'View and monitor lockdown status',
-            href: '/lockdown',
+            href: '/dashboard/lockdown',
             icon: Lock,
             color: '#3B82F6',
             bg: 'rgba(59, 130, 246, 0.1)',
@@ -318,7 +318,7 @@ export default function DashboardPage() {
           {
             title: 'Visitors',
             description: 'Register visitors and gate attendance',
-            href: '/visitors',
+            href: '/dashboard/visitors',
             icon: AlertTriangle,
             color: '#F59E0B',
             bg: 'rgba(245, 158, 11, 0.1)',
