@@ -114,7 +114,7 @@ const userSchema = new mongoose.Schema({
   },
   assignedGate: {
     type: String,
-    enum: ['Main Gate', 'Back Gate', 'Staff Entrance', 'Sports Gate'],
+    enum: [ "", 'Main Gate', 'Back Gate', 'Staff Entrance', 'Sports Gate'],
     default: '',
   },
   assignedClass: {
