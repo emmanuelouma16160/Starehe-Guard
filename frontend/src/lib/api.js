@@ -27,20 +27,6 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Add token to every request
-api.interceptors.request.use(
-  (config) => {
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('stasentry_token');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
 // Handle 401 responses
 api.interceptors.response.use(
   (response) => response,
