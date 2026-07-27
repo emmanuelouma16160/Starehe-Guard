@@ -38,8 +38,9 @@ const useAuthStore = create(
 
       login: async (email, password) => {
         set({ isLoading: true });
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+          const response = await fetch(`${apiUrl}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
@@ -66,8 +67,9 @@ const useAuthStore = create(
 
       register: async (userData) => {
         set({ isLoading: true });
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
+          const response = await fetch(`${apiUrl}/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(userData),
