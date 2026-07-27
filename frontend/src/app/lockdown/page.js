@@ -17,7 +17,7 @@ export default function LockdownPage() {
   const [notificationMessage, setNotificationMessage] = useState('');
   const [history, setHistory] = useState([]);
 
-  const isAdmin = user?.role === 'admin' || user?.role === 'super_admin';
+  const canControl = ['guard', 'admin', 'super_admin'].includes(user?.role);
   const isGuard = user?.role === 'guard';
 
   useEffect(() => {
@@ -125,8 +125,8 @@ export default function LockdownPage() {
   return (
     <>
       <TopBar 
-        title="Lockdown Management" 
-        subtitle={isAdmin ? "Control and monitor school lockdown" : "View lockdown status and report concerns"} 
+        title="Lockdown Management"
+      subtitle={canControl ? 'Control and monitor school lockdown' : 'View lockdown status'}
       />
       <div className="p-6 space-y-5">
         {loading ? (
@@ -194,9 +194,9 @@ export default function LockdownPage() {
             </div>
 
             {/* Admin Controls */}
-            {isAdmin && (
+            {canControl && (
               <div className="card">
-                <h3 className="font-bold text-primary mb-3">Admin Controls</h3>
+                <h3 className="font-bold text-primary mb-3">Lockdown Controls</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="p-4 bg-gray-50 rounded-xl">
                     <div className="flex items-center gap-3">
@@ -227,16 +227,16 @@ export default function LockdownPage() {
             )}
 
             {/* Guard Notification */}
-            {isGuard && lockdownStatus?.status !== 'active' && (
+            {!lockdownStatus?.status === 'active' && canControl && (
               <div className="card">
                 <h3 className="font-bold text-primary mb-3 flex items-center gap-2">
                   <Bell size={18} />
                   Notify Admin
                 </h3>
                 <p className="text-sm text-gray-500 mb-3">
-                  If you notice any security concerns, notify the admin to authorize lockdown.
+                  If you notice any security concerns, notify the admin or start lockdown.
                 </p>
-                <div className="flex gap-3">
+                <div className="flex gap-3 flex-col sm:flex-row">
                   <input
                     type="text"
                     value={notificationMessage}

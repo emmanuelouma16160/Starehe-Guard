@@ -32,8 +32,8 @@ router.get('/status', protect, async (req, res) => {
   }
 });
 
-// Trigger lockdown (admin only)
-router.post('/trigger', protect, authorize('admin', 'super_admin'), async (req, res) => {
+// Trigger lockdown (guard, admin, super_admin)
+router.post('/trigger', protect, authorize('guard', 'admin', 'super_admin'), async (req, res) => {
   try {
     const { reason } = req.body;
     
@@ -75,8 +75,8 @@ router.post('/trigger', protect, authorize('admin', 'super_admin'), async (req, 
   }
 });
 
-// Release lockdown (admin only)
-router.post('/release', protect, authorize('admin', 'super_admin'), async (req, res) => {
+// Release lockdown (guard, admin, super_admin)
+router.post('/release', protect, authorize('guard', 'admin', 'super_admin'), async (req, res) => {
   try {
     let lockdown = await Lockdown.findOne();
 
