@@ -218,6 +218,38 @@ export default function GuardPage() {
           </p>
         </div>
 
+        {/* Quick access buttons */}
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <button
+            type="button"
+            onClick={() => router.push('/incidents')}
+            className="rounded-2xl border border-white/10 bg-white/5 py-3 px-4 text-sm font-semibold text-white hover:bg-white/10 transition"
+          >
+            Report Incident
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push('/visitors')}
+            className="rounded-2xl border border-white/10 bg-white/5 py-3 px-4 text-sm font-semibold text-white hover:bg-white/10 transition"
+          >
+            Manage Visitors
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push('/reports')}
+            className="rounded-2xl border border-white/10 bg-white/5 py-3 px-4 text-sm font-semibold text-white hover:bg-white/10 transition"
+          >
+            Generate Report
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push('/lockdown')}
+            className="rounded-2xl border border-white/10 bg-white/5 py-3 px-4 text-sm font-semibold text-white hover:bg-white/10 transition"
+          >
+            Lockdown Status
+          </button>
+        </div>
+
         {/* Scan Result */}
         {scanResult && (
           <div

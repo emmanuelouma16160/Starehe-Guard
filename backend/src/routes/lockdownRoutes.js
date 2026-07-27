@@ -144,7 +144,7 @@ router.post('/notify', protect, authorize('guard'), async (req, res) => {
 });
 
 // Get lockdown history
-router.get('/history', protect, authorize('admin', 'super_admin'), async (req, res) => {
+router.get('/history', protect, authorize('guard', 'admin', 'super_admin'), async (req, res) => {
   try {
     const lockdown = await Lockdown.findOne()
       .populate('history.user', 'name email role');
