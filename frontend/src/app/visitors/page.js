@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Plus, Search, Eye, LogOut, Clock, User, Shield, AlertTriangle, X, Camera } from 'lucide-react';
 import TopBar from '@/components/TopBar';
 import api from '@/lib/api';
@@ -96,7 +96,7 @@ export default function VisitorsPage() {
         ...formData,
         arrivalTime: new Date().toISOString(),
         status: 'inside',
-        signedInBy: user.id,
+        signedInBy: user?._id || user?.id,
         badgeNumber: `V${Date.now().toString().slice(-6)}${Math.floor(Math.random() * 1000)}`,
       };
 
@@ -132,7 +132,7 @@ export default function VisitorsPage() {
     try {
       const { data } = await api.put(`/visitors/${visitorId}/signout`, {
         signOutTime: new Date().toISOString(),
-        signedOutBy: user.id,
+        signedOutBy: user?._id || user?.id,
       });
       toast.success(data.message || 'Visitor signed out successfully');
       setShowSignOutModal(null);
@@ -162,11 +162,18 @@ export default function VisitorsPage() {
     return styles[type] || styles.other;
   };
 
-  const filteredVisitors = visitors.filter(v =>
+  const visitorStats = useMemo(() => ({
+    currentlyInside: visitors.filter((v) => v.status === 'inside').length,
+    todayVisitors: visitors.filter((v) => new Date(v.arrivalTime).toDateString() === new Date().toDateString()).length,
+    parents: visitors.filter((v) => v.visitorType === 'parent').length,
+    oldStarehians: visitors.filter((v) => v.visitorType === 'old_starehian').length,
+  }), [visitors]);
+
+  const filteredVisitors = useMemo(() => visitors.filter((v) =>
     v.name?.toLowerCase().includes(search.toLowerCase()) ||
     v.phone?.includes(search) ||
     v.badgeNumber?.toLowerCase().includes(search.toLowerCase())
-  );
+  ), [visitors, search]);
 
   return (
     <>
@@ -182,7 +189,7 @@ export default function VisitorsPage() {
               <div>
                 <p className="text-sm text-gray-500">Currently Inside</p>
                 <p className="text-2xl font-bold text-primary">
-                  {visitors.filter(v => v.status === 'inside').length}
+                  {visitorStats.currentlyInside}
                 </p>
               </div>
             </div>
@@ -195,7 +202,7 @@ export default function VisitorsPage() {
               <div>
                 <p className="text-sm text-gray-500">Today's Visitors</p>
                 <p className="text-2xl font-bold text-primary">
-                  {visitors.filter(v => new Date(v.arrivalTime).toDateString() === new Date().toDateString()).length}
+                  {visitorStats.todayVisitors}
                 </p>
               </div>
             </div>
@@ -208,7 +215,7 @@ export default function VisitorsPage() {
               <div>
                 <p className="text-sm text-gray-500">Parents</p>
                 <p className="text-2xl font-bold text-primary">
-                  {visitors.filter(v => v.visitorType === 'parent').length}
+                  {visitorStats.parents}
                 </p>
               </div>
             </div>
@@ -221,7 +228,7 @@ export default function VisitorsPage() {
               <div>
                 <p className="text-sm text-gray-500">Old Starehians</p>
                 <p className="text-2xl font-bold text-primary">
-                  {visitors.filter(v => v.visitorType === 'old_starehian').length}
+                  {visitorStats.oldStarehians}
                 </p>
               </div>
             </div>

@@ -19,8 +19,41 @@ export const getIncidents = async (req, res, next) => {
       return res.status(403).json({ message: 'Access denied' });
     }
 
-    const incidents = await Incident.find().sort({ createdAt: -1 });
-    res.json(incidents);
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const skip = (page - 1) * limit;
+
+    const query = {};
+
+    if (req.query.status) {
+      query.status = req.query.status;
+    }
+
+    if (req.query.severity) {
+      query.severity = req.query.severity;
+    }
+
+    if (req.query.search) {
+      query.$or = [
+        { description: { $regex: req.query.search, $options: 'i' } },
+        { location: { $regex: req.query.search, $options: 'i' } },
+      ];
+    }
+
+    const [incidents, total] = await Promise.all([
+      Incident.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit),
+      Incident.countDocuments(query),
+    ]);
+
+    res.json({
+      incidents,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
+      },
+    });
   } catch (error) {
     next(error);
   }

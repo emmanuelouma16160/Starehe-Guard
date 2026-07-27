@@ -176,7 +176,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Users, UserCheck, AlertTriangle, FileText, Shield, MessageCircle, Lock } from 'lucide-react';
 import TopBar from '@/components/TopBar';
@@ -194,29 +194,41 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let active = true;
+
     const fetchStats = async () => {
       try {
         const [studentsRes, incidentsRes] = await Promise.all([
           api.get('/students?limit=1'),
           api.get('/incidents?limit=1'),
         ]);
+
+        if (!active) return;
+
         setStats({
           students: studentsRes.data.pagination?.total || 0,
           staff: 0,
-          incidents: incidentsRes.data.pagination?.total || 0,
+          incidents: incidentsRes.data.pagination?.total || incidentsRes.data.incidents?.length || 0,
           messages: 0,
         });
       } catch {
         // Silent fail
       } finally {
-        setLoading(false);
+        if (active) {
+          setLoading(false);
+        }
       }
     };
+
     fetchStats();
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   const role = user?.role;
-  const quickActions = [
+  const quickActions = useMemo(() => [
     ...(role === 'parent'
       ? [
           {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { AlertTriangle, Plus, Eye, CheckCircle, Clock, X, Flag, Users, MapPin } from 'lucide-react';
 import TopBar from '@/components/TopBar';
 import api from '@/lib/api';
@@ -35,6 +35,7 @@ export default function IncidentsPage() {
   const { user } = useAuthStore();
   const [incidents, setIncidents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState({ page: 1, limit: 20, total: 0, pages: 1 });
   const [showModal, setShowModal] = useState(false);
   const [selectedIncident, setSelectedIncident] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -52,13 +53,15 @@ export default function IncidentsPage() {
 
   useEffect(() => {
     fetchIncidents();
-  }, []);
+  }, [user?.role]);
 
   const fetchIncidents = async () => {
     try {
       const endpoint = isAdmin ? '/incidents/all' : '/incidents';
-      const { data } = await api.get(endpoint);
-      setIncidents(data);
+      const { data } = await api.get(endpoint, { params: { page: 1, limit: 20 } });
+      const incidentList = Array.isArray(data) ? data : data.incidents || [];
+      setIncidents(incidentList);
+      setPagination(data.pagination || { page: 1, limit: 20, total: incidentList.length, pages: 1 });
     } catch (error) {
       toast.error('Failed to load incidents');
     } finally {
@@ -110,6 +113,13 @@ export default function IncidentsPage() {
     }
   };
 
+  const incidentStats = useMemo(() => ({
+    pending: incidents.filter((incident) => incident.status === 'pending').length,
+    investigating: incidents.filter((incident) => incident.status === 'investigating').length,
+    resolved: incidents.filter((incident) => incident.status === 'resolved').length,
+    total: incidents.length,
+  }), [incidents]);
+
   const getSeverityBadge = (severity) => {
     const styles = {
       critical: 'bg-red-600 text-white',
@@ -147,7 +157,7 @@ export default function IncidentsPage() {
               <div>
                 <p className="text-sm text-gray-500">Pending</p>
                 <p className="text-2xl font-bold text-primary">
-                  {incidents.filter(i => i.status === 'pending').length}
+                  {incidentStats.pending}
                 </p>
               </div>
             </div>
@@ -160,7 +170,7 @@ export default function IncidentsPage() {
               <div>
                 <p className="text-sm text-gray-500">Investigating</p>
                 <p className="text-2xl font-bold text-primary">
-                  {incidents.filter(i => i.status === 'investigating').length}
+                  {incidentStats.investigating}
                 </p>
               </div>
             </div>
@@ -173,7 +183,7 @@ export default function IncidentsPage() {
               <div>
                 <p className="text-sm text-gray-500">Resolved</p>
                 <p className="text-2xl font-bold text-primary">
-                  {incidents.filter(i => i.status === 'resolved').length}
+                  {incidentStats.resolved}
                 </p>
               </div>
             </div>
@@ -185,7 +195,7 @@ export default function IncidentsPage() {
               </div>
               <div>
                 <p className="text-sm text-gray-500">Total</p>
-                <p className="text-2xl font-bold text-primary">{incidents.length}</p>
+                <p className="text-2xl font-bold text-primary">{incidentStats.total}</p>
               </div>
             </div>
           </div>

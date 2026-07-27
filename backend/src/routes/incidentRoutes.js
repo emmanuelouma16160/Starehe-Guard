@@ -16,6 +16,7 @@ router.use(protect);
 
 router.get('/count/open', guardOnly, getOpenIncidentsCount);
 router.post('/lockdown', superAdminOnly, triggerLockdown);
+router.get('/all', adminOnly, getIncidents);
 router.get('/', protect, getIncidents);
 router.post('/', guardOnly, createIncident);
 router.get('/:id', guardOnly, getIncidentById);
