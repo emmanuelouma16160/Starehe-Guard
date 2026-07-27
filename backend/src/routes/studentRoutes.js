@@ -30,7 +30,7 @@ import {
   updateStudent,
   getStudentQRCode,
 } from '../controllers/studentController.js';
-import { protect } from '../middleware/auth.js';
+import { protect } from '../middleware/authMiddleware.js';
 import { adminOnly, guardOnly, parentOnly, staffOnly } from '../middleware/role.js';
 
 const router = express.Router();

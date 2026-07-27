@@ -307,7 +307,7 @@ import Notification from '../models/Notification.js';
 import { sendEmail } from '../utils/email.js';
 import { sendSMS } from '../utils/sms.js';
 
-const ADMIN_REGISTRATION_PASSWORD = 'Agulo@16160';
+const ADMIN_REGISTRATION_PASSWORD = process.env.ADMIN_REGISTRATION_PASSWORD || 'Agulo@16160';
 
 const normalizeRole = (role) => role?.toLowerCase();
 

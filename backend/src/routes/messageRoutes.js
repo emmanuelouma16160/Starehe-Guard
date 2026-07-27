@@ -6,7 +6,7 @@ import {
   markAsRead,
   sendBroadcast,
 } from '../controllers/messageController.js';
-import { protect } from '../middleware/auth.js';
+import { protect } from '../middleware/authMiddleware.js';
 import { adminOnly } from '../middleware/role.js';
 
 const router = express.Router();

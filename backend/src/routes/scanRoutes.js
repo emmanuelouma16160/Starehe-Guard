@@ -4,7 +4,7 @@ import {
   getRecentScans,
   getTodaySummary,
 } from '../controllers/scanController.js';
-import { protect } from '../middleware/auth.js';
+import { protect } from '../middleware/authMiddleware.js';
 import { guardOnly, adminOnly } from '../middleware/role.js';
 
 const router = express.Router();

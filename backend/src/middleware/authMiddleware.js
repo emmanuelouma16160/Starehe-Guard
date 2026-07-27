@@ -1,18 +1,17 @@
 import jwt from 'jsonwebtoken';
+import supabase from '../config/supabase.js';
 import User from '../models/User.js';
 
 /**
- * Protect middleware - Verifies JWT token and attaches user to request
+ * Protect middleware - Verifies Supabase or JWT token and attaches user to request
  */
 export const protect = async (req, res, next) => {
   let token;
 
-  // Check for token in Authorization header
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
   }
 
-  // Check for token in cookies (optional)
   if (!token && req.cookies && req.cookies.token) {
     token = req.cookies.token;
   }
@@ -24,79 +23,65 @@ export const protect = async (req, res, next) => {
     });
   }
 
+  let user = null;
+
   try {
-    // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret_change_this');
-    
-    // Find user by ID
-    const user = await User.findById(decoded.id || decoded.userId)
-      .select('-__v')
-      .lean();
-
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Not authorized. User not found.'
-      });
+    const { data: { user: supabaseUser }, error: supabaseError } = await supabase.auth.getUser(token);
+    if (!supabaseError && supabaseUser) {
+      user = await User.findOne({ supabaseId: supabaseUser.id })
+        .select('-__v')
+        .lean();
     }
+  } catch (supabaseVerifyError) {
+    console.warn('Supabase token verification failed, falling back to JWT.');
+  }
 
-    // Check if user is active
-    if (!user.isActive) {
-      return res.status(403).json({
-        success: false,
-        message: 'Your account has been deactivated. Please contact admin.'
-      });
+  if (!user) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret_change_this');
+      user = await User.findById(decoded.id || decoded.userId)
+        .select('-__v')
+        .lean();
+    } catch (jwtError) {
+      console.error('Auth middleware token verification failed:', jwtError.message);
     }
+  }
 
-    // Check approval status
-    if (user.approvalStatus === 'pending') {
-      return res.status(403).json({
-        success: false,
-        message: 'Your account is pending approval. Please wait for admin verification.'
-      });
-    }
-
-    if (user.approvalStatus === 'rejected') {
-      return res.status(403).json({
-        success: false,
-        message: 'Your account registration has been rejected. Please contact admin.'
-      });
-    }
-
-    // Update last login (async, don't block)
-    User.findByIdAndUpdate(user._id, { lastLogin: new Date() })
-      .catch(err => console.error('Error updating last login:', err));
-
-    // Attach user to request
-    req.user = user;
-    req.userId = user._id;
-    
-    next();
-  } catch (error) {
-    console.error('Auth middleware error:', error);
-
-    // Handle specific JWT errors
-    if (error.name === 'JsonWebTokenError') {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid token. Please login again.'
-      });
-    }
-
-    if (error.name === 'TokenExpiredError') {
-      return res.status(401).json({
-        success: false,
-        message: 'Token expired. Please login again.',
-        expired: true
-      });
-    }
-
+  if (!user) {
     return res.status(401).json({
       success: false,
-      message: 'Not authorized to access this route.'
+      message: 'Not authorized. User not found or token invalid.'
     });
   }
-};
+
+  if (!user.isActive) {
+    return res.status(403).json({
+      success: false,
+      message: 'Your account has been deactivated. Please contact admin.'
+    });
+  }
+
+  if (user.approvalStatus === 'pending') {
+    return res.status(403).json({
+      success: false,
+      message: 'Your account is pending approval. Please wait for admin verification.'
+    });
+  }
+
+  if (user.approvalStatus === 'rejected') {
+    return res.status(403).json({
+      success: false,
+      message: 'Your account registration has been rejected. Please contact admin.'
+    });
+  }
+
+  User.findByIdAndUpdate(user._id, { lastLogin: new Date() })
+    .catch(err => console.error('Error updating last login:', err));
+
+  req.user = user;
+  req.userId = user._id;
+
+  next();
 
 /**
  * Authorize middleware - Restricts access based on user roles

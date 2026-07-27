@@ -1,6 +1,6 @@
 import express from 'express';
 import { protect, authorize } from '../middleware/authMiddleware.js';
-import Blacklist from '../models/blacklist.js';
+import Blacklist from '../models/Blacklist.js';
 
 const router = express.Router();
 

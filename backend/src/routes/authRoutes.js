@@ -10,7 +10,7 @@ import {
   approveUser,
   deactivateUser,
 } from '../controllers/authController.js';
-import { protect } from '../middleware/auth.js';
+import { protect } from '../middleware/authMiddleware.js';
 import { adminOnly, superAdminOnly } from '../middleware/role.js';
 
 const router = express.Router();

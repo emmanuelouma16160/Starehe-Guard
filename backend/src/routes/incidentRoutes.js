@@ -7,7 +7,7 @@ import {
   triggerLockdown,
   getOpenIncidentsCount,
 } from '../controllers/incidentController.js';
-import { protect } from '../middleware/auth.js';
+import { protect } from '../middleware/authMiddleware.js';
 import { adminOnly, guardOnly, superAdminOnly } from '../middleware/role.js';
 
 const router = express.Router();
