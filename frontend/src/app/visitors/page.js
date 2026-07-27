@@ -47,9 +47,7 @@ export default function VisitorsPage() {
   // Check if a visitor is blacklisted
   const checkBlacklist = async (phone, idNumber) => {
     try {
-      const { data } = await api.get(`/blacklist/check`, {
-        params: { phone, idNumber }
-      });
+      const { data } = await api.post('/blacklist/check', { phone, idNumber });
       return data;
     } catch {
       return null;
