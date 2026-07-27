@@ -14,7 +14,15 @@ export const createIncident = async (req, res, next) => {
 
 export const getIncidents = async (req, res, next) => {
   try {
-    const incidents = await Incident.find().sort({ createdAt: -1 });
+    const query = {};
+
+    if (req.user?.role === 'guard') {
+      query.reportedBy = req.user._id;
+    } else if (req.user?.role !== 'admin' && req.user?.role !== 'super_admin') {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    const incidents = await Incident.find(query).sort({ createdAt: -1 });
     res.json(incidents);
   } catch (error) {
     next(error);

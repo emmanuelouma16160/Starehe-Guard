@@ -295,6 +295,22 @@ export default function DashboardPage() {
             color: '#EF4444',
             bg: 'rgba(239, 68, 68, 0.1)',
           },
+          {
+            title: 'Generate Report',
+            description: 'Create a new security report',
+            href: '/reports',
+            icon: FileText,
+            color: '#F59E0B',
+            bg: 'rgba(245, 158, 11, 0.1)',
+          },
+          {
+            title: 'Lockdown Status',
+            description: 'View and monitor lockdown status',
+            href: '/lockdown',
+            icon: Lock,
+            color: '#3B82F6',
+            bg: 'rgba(59, 130, 246, 0.1)',
+          },
         ]
       : []),
     ...(role === 'guard' || role === 'admin' || role === 'super_admin'
