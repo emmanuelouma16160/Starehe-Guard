@@ -505,9 +505,26 @@ export default function Sidebar() {
     }
   }, [isInitialized, user, router]);
 
-  // Guard role should be redirected to /guard
   useEffect(() => {
-    if (user && user.role === 'guard' && !pathname.startsWith('/guard')) {
+    if (!user || user.role !== 'guard') return;
+
+    const allowedGuardPaths = [
+      '/guard',
+      '/visitors',
+      '/dashboard/visitors',
+      '/dashboard/messages',
+      '/reports',
+      '/incidents',
+      '/lockdown',
+      '/messages',
+      '/notifications',
+    ];
+
+    const isAllowedPath = allowedGuardPaths.some(
+      (path) => pathname === path || pathname.startsWith(`${path}/`)
+    );
+
+    if (!isAllowedPath) {
       router.push('/guard');
     }
   }, [user, pathname, router]);

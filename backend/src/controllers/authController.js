@@ -587,8 +587,11 @@ export const getAllUsers = async (req, res) => {
     }
 
     const skip = (page - 1) * limit;
+    const isAdmin = ['super_admin', 'admin'].includes(req.user.role);
+    const userFields = isAdmin ? '-__v' : 'name email phone role';
+
     const users = await User.find(query)
-      .select('-__v')
+      .select(userFields)
       .skip(skip)
       .limit(parseInt(limit))
       .sort({ createdAt: -1 });

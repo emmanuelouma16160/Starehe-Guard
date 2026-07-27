@@ -178,7 +178,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Users, UserCheck, AlertTriangle, FileText, Shield, MessageCircle } from 'lucide-react';
+import { Users, UserCheck, AlertTriangle, FileText, Shield, MessageCircle, Lock } from 'lucide-react';
 import TopBar from '@/components/TopBar';
 import api from '@/lib/api';
 import useAuthStore from '@/store/useAuthStore';
@@ -318,7 +318,7 @@ export default function DashboardPage() {
           {
             title: 'Visitors',
             description: 'Register visitors and gate attendance',
-            href: '/dashboard/visitors',
+            href: '/visitors',
             icon: AlertTriangle,
             color: '#F59E0B',
             bg: 'rgba(245, 158, 11, 0.1)',

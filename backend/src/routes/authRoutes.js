@@ -22,7 +22,7 @@ router.post('/login', loginUser);
 router.get('/me', protect, getMe);
 router.put('/profile', protect, updateProfile);
 
-router.get('/users', protect, adminOnly, getAllUsers);
+router.get('/users', protect, getAllUsers);
 router.get('/users/pending', protect, adminOnly, getPendingUsers);
 router.put('/users/:userId/approve', protect, adminOnly, approveUser);
 router.put('/users/:userId/deactivate', protect, superAdminOnly, deactivateUser);
