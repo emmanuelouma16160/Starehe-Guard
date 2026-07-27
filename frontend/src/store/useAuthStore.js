@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import api from '@/lib/api';
 
 const useAuthStore = create(
   persist(
@@ -38,51 +39,40 @@ const useAuthStore = create(
 
       login: async (email, password) => {
         set({ isLoading: true });
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
         try {
-          const response = await fetch(`${apiUrl}/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-          });
+          const response = await api.post('/auth/login', { email, password });
+          const data = response.data;
 
-          const data = await response.json();
-          if (!response.ok) throw new Error(data.message || 'Login failed');
+          get().setUser(data.user, data.token);
+          set({ isLoading: false });
 
-          set({
-            user: data.user,
-            token: data.token,
-            isLoading: false,
-          });
-          
           localStorage.setItem('stasentry_token', data.token);
           localStorage.setItem('stasentry_user', JSON.stringify(data.user));
-          
+
           return { success: true, user: data.user };
         } catch (error) {
           set({ isLoading: false });
-          return { success: false, error: error.message };
+          return {
+            success: false,
+            error: error.response?.data?.message || error.message || 'Login failed',
+          };
         }
       },
 
       register: async (userData) => {
         set({ isLoading: true });
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
         try {
-          const response = await fetch(`${apiUrl}/auth/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(userData),
-          });
-
-          const data = await response.json();
-          if (!response.ok) throw new Error(data.message || 'Registration failed');
+          const response = await api.post('/auth/register', userData);
+          const data = response.data;
 
           set({ isLoading: false });
           return { success: true, data };
         } catch (error) {
           set({ isLoading: false });
-          return { success: false, error: error.message };
+          return {
+            success: false,
+            error: error.response?.data?.message || error.message || 'Registration failed',
+          };
         }
       },
 
