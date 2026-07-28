@@ -98,13 +98,12 @@ visitorSchema.index({ arrivalTime: -1 });
 visitorSchema.index({ visitorType: 1 });
 
 // Generate badge number before saving
-visitorSchema.pre('save', function(next) {
+visitorSchema.pre('save', function() {
   if (!this.badgeNumber) {
     const timestamp = Date.now().toString().slice(-6);
     const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
     this.badgeNumber = `V${timestamp}${random}`;
   }
-  next();
 });
 
 const Visitor = mongoose.model('Visitor', visitorSchema);

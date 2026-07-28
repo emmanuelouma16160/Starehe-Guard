@@ -4,7 +4,6 @@ import Notification from '../models/Notification.js';
 import { generateQRCodeData, generateQRCodeImage } from '../utils/qr.js';
 import { sendSMS } from '../utils/sms.js';
 import { sendEmail } from '../utils/email.js';
-import { parentOnly } from '../middleware/role.js';
 
 // ===== CREATE STUDENT =====
 export const createStudent = async (req, res) => {
@@ -188,7 +187,15 @@ export const getMyStudents = async (req, res) => {
       .populate('parents', 'name email phone')
       .sort({ createdAt: -1 });
 
-    res.json(students);
+    res.json({
+      students,
+      pagination: {
+        page: 1,
+        limit: students.length,
+        total: students.length,
+        pages: 1,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch your students', error: error.message });
   }

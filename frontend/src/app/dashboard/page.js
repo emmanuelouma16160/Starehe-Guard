@@ -171,18 +171,18 @@ export default function DashboardPage() {
         <div className="card" style={{ background: 'linear-gradient(135deg, rgba(0, 212, 170, 0.05), rgba(0, 212, 170, 0.1))', borderColor: 'rgba(0, 212, 170, 0.2)' }}>
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-bold text-[#0F1A1A]">
+              <h2 className="text-xl font-bold text-primary">
                 Welcome back, {user?.name}! 👋
               </h2>
               <p className="text-slate-500 text-sm mt-1">
-                You are logged in as <span className="font-semibold text-[#00D4AA]">{user?.role}</span>
+                You are logged in as <span className="font-semibold text-accent">{user?.role}</span>
               </p>
               {user?.phone && (
                 <p className="text-xs text-slate-400 mt-1">📞 {user.phone}</p>
               )}
             </div>
-            <div className="w-16 h-16 bg-[#00D4AA]/20 rounded-full flex items-center justify-center">
-              <Shield size={32} className="text-[#00D4AA]" />
+            <div className="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center">
+              <Shield size={32} className="text-accent" />
             </div>
           </div>
         </div>
@@ -191,11 +191,11 @@ export default function DashboardPage() {
         <div className="grid gap-4 md:grid-cols-4">
           <div className="card">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-[#00D4AA]/10 rounded-xl">
-                <Users size={20} className="text-[#00D4AA]" />
+              <div className="p-3 bg-accent/10 rounded-xl">
+                <Users size={20} className="text-accent" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-[#0F1A1A]">{loading ? '...' : stats.students}</p>
+                <p className="text-2xl font-bold text-primary">{loading ? '...' : stats.students}</p>
                 <p className="text-xs text-slate-500">Total Students</p>
               </div>
             </div>
@@ -206,29 +206,29 @@ export default function DashboardPage() {
                 <UserCheck size={20} className="text-blue-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-[#0F1A1A]">{loading ? '...' : stats.staff}</p>
+                <p className="text-2xl font-bold text-primary">{loading ? '...' : stats.staff}</p>
                 <p className="text-xs text-slate-500">Staff Members</p>
               </div>
             </div>
           </div>
           <div className="card">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-[#EF4444]/10 rounded-xl">
-                <AlertTriangle size={20} className="text-[#EF4444]" />
+              <div className="p-3 bg-danger/10 rounded-xl">
+                <AlertTriangle size={20} className="text-danger" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-[#0F1A1A]">{loading ? '...' : stats.incidents}</p>
+                <p className="text-2xl font-bold text-primary">{loading ? '...' : stats.incidents}</p>
                 <p className="text-xs text-slate-500">Total Incidents</p>
               </div>
             </div>
           </div>
           <div className="card">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-[#F59E0B]/10 rounded-xl">
-                <MessageCircle size={20} className="text-[#F59E0B]" />
+              <div className="p-3 bg-warning/10 rounded-xl">
+                <MessageCircle size={20} className="text-warning" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-[#0F1A1A]">{loading ? '...' : stats.messages}</p>
+                <p className="text-2xl font-bold text-primary">{loading ? '...' : stats.messages}</p>
                 <p className="text-xs text-slate-500">Unread Messages</p>
               </div>
             </div>
@@ -237,18 +237,18 @@ export default function DashboardPage() {
 
         {/* Quick Actions */}
         <div>
-          <h3 className="font-semibold text-[#0F1A1A] mb-4">Quick Actions</h3>
+          <h3 className="font-semibold text-primary mb-4">Quick Actions</h3>
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {quickActions.map((action) => {
               const Icon = action.icon;
               return (
-                <Link key={action.title} href={action.href} className="card hover:border-[#00D4AA]/30 group">
+                <Link key={action.title} href={action.href} className="card hover:border-accent/30 group">
                   <div className="flex items-start gap-3">
                     <div className="p-3 rounded-xl" style={{ background: action.bg }}>
                       <Icon size={20} style={{ color: action.color }} />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-[#0F1A1A] text-sm">{action.title}</h4>
+                      <h4 className="font-semibold text-primary text-sm">{action.title}</h4>
                       <p className="text-xs text-slate-500 mt-0.5">{action.description}</p>
                     </div>
                   </div>

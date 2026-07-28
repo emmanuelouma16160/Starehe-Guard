@@ -10,6 +10,63 @@ import toast from 'react-hot-toast';
 const CLASSES = ['Form 1', 'Form 2', 'Form 3', 'Form 4'];
 const STREAMS = ['A', 'B', 'C', 'D', 'E', 'East', 'West', 'North', 'South'];
 
+const ParentSection = ({ title, type, required = false, parentDetails, handleChange }) => {
+  const data = parentDetails[type];
+  return (
+    <div className="bg-gray-50 rounded-xl p-4 mb-4">
+      <h3 className="font-semibold text-primary text-sm mb-3 flex items-center gap-2">
+        {title}
+        {required && <span className="text-danger text-xs">*</span>}
+      </h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div>
+          <label className="label text-xs">Full Name</label>
+          <input
+            name={`${type}.name`}
+            value={data.name}
+            onChange={handleChange}
+            placeholder="Enter full name"
+            className="input"
+          />
+        </div>
+        <div>
+          <label className={`label text-xs ${required ? 'text-danger' : ''}`}>
+            Phone Number {required && '*'}
+          </label>
+          <input
+            name={`${type}.phone`}
+            value={data.phone}
+            onChange={handleChange}
+            placeholder="0712345678"
+            className={`input ${required ? 'border-accent/30 focus:border-accent' : ''}`}
+            required={required}
+          />
+        </div>
+        <div>
+          <label className="label text-xs">Email</label>
+          <input
+            name={`${type}.email`}
+            value={data.email}
+            onChange={handleChange}
+            placeholder="parent@email.com"
+            className="input"
+          />
+        </div>
+        <div>
+          <label className="label text-xs">National ID</label>
+          <input
+            name={`${type}.nationalId`}
+            value={data.nationalId}
+            onChange={handleChange}
+            placeholder="12345678"
+            className="input"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function NewStudentPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -80,72 +137,6 @@ export default function NewStudentPage() {
       setLoading(false);
     }
   };
-
-  const ParentSection = ({ title, type, required = false }) => (
-    <div className="bg-gray-50 rounded-xl p-4 mb-4">
-      <h3 className="font-semibold text-primary text-sm mb-3 flex items-center gap-2">
-        {title}
-        {required && <span className="text-danger text-xs">*</span>}
-      </h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <div>
-          <label className="label text-xs">Full Name</label>
-          <input
-            name={`${type}.name`}
-            value={formData.parentDetails[type].name}
-            onChange={handleChange}
-            placeholder="Enter full name"
-            className="input"
-          />
-        </div>
-        <div>
-          <label className={`label text-xs ${required ? 'text-danger' : ''}`}>
-            Phone Number {required && '*'}
-          </label>
-          <input
-            name={`${type}.phone`}
-            value={formData.parentDetails[type].phone}
-            onChange={handleChange}
-            placeholder="0712345678"
-            className={`input ${required ? 'border-accent/30 focus:border-accent' : ''}`}
-            required={required}
-          />
-        </div>
-        <div>
-          <label className="label text-xs">Email</label>
-          <input
-            name={`${type}.email`}
-            value={formData.parentDetails[type].email}
-            onChange={handleChange}
-            placeholder="parent@email.com"
-            className="input"
-          />
-        </div>
-        <div>
-          <label className="label text-xs">National ID</label>
-          <input
-            name={`${type}.nationalId`}
-            value={formData.parentDetails[type].nationalId}
-            onChange={handleChange}
-            placeholder="12345678"
-            className="input"
-          />
-        </div>
-        {type === 'emergency' && (
-          <div className="md:col-span-2">
-            <label className="label text-xs">Relationship</label>
-            <input
-              name={`${type}.relationship`}
-              value={formData.parentDetails[type].relationship}
-              onChange={handleChange}
-              placeholder="e.g. Aunt, Uncle, Neighbor"
-              className="input"
-            />
-          </div>
-        )}
-      </div>
-    </div>
-  );
 
   return (
     <>
@@ -296,9 +287,24 @@ export default function NewStudentPage() {
               </p>
             </div>
 
-            <ParentSection title="👨 Father" type="father" />
-            <ParentSection title="👩 Mother" type="mother" />
-            <ParentSection title="👤 Guardian (Optional)" type="guardian" />
+            <ParentSection 
+              title="👨 Father" 
+              type="father" 
+              parentDetails={formData.parentDetails} 
+              handleChange={handleChange} 
+            />
+            <ParentSection 
+              title="👩 Mother" 
+              type="mother" 
+              parentDetails={formData.parentDetails} 
+              handleChange={handleChange} 
+            />
+            <ParentSection 
+              title="👤 Guardian (Optional)" 
+              type="guardian" 
+              parentDetails={formData.parentDetails} 
+              handleChange={handleChange} 
+            />
 
             <div className="bg-danger-light rounded-xl p-4 border border-danger/20">
               <h3 className="font-semibold text-danger text-sm mb-3 flex items-center gap-2">

@@ -168,7 +168,7 @@ export default function LockdownPage() {
                   )}
                 </div>
                 <div className="ml-auto">
-                  {isAdmin && (
+                  {canControl && (
                     <>
                       {lockdownStatus?.status === 'active' ? (
                         <button
@@ -227,7 +227,7 @@ export default function LockdownPage() {
             )}
 
             {/* Guard Notification */}
-            {!lockdownStatus?.status === 'active' && canControl && (
+            {lockdownStatus?.status !== 'active' && canControl && (
               <div className="card">
                 <h3 className="font-bold text-primary mb-3 flex items-center gap-2">
                   <Bell size={18} />

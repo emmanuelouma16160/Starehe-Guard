@@ -113,6 +113,7 @@ router.post('/', protect, authorize('guard', 'admin', 'super_admin'), async (req
     
     res.status(201).json(visitor);
   } catch (error) {
+    console.error({error})
     res.status(500).json({ message: 'Error signing in visitor', error: error.message });
   }
 });
