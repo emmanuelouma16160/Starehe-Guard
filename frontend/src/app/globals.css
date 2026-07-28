@@ -66,8 +66,7 @@
 
  @import "tailwindcss";
 
-/* Custom Theme Variables */
-:root {
+@theme {
   --color-primary: #0F1A1A;
   --color-primary-light: #1A2F2F;
   --color-accent: #00D4AA;

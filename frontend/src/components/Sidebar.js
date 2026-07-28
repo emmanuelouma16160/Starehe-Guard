@@ -545,7 +545,7 @@ export default function Sidebar() {
       {/* Mobile Toggle */}
       <button
         onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="fixed bottom-4 right-4 z-50 lg:hidden p-3 bg-accent text-primary rounded-full shadow-lg"
+        className="fixed bottom-4 right-4 z-50 lg:hidden p-3 bg-accent text-primary rounded-full shadow-lg transition-transform active:scale-95"
       >
         {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
@@ -554,32 +554,43 @@ export default function Sidebar() {
       <aside
         className={`
           fixed top-0 left-0 z-40 h-screen
+          lg:sticky lg:top-0 lg:h-screen lg:z-30
           bg-gradient-to-b from-primary to-primary-light
           text-white transition-all duration-300 ease-in-out
           ${isCollapsed ? 'w-[72px]' : 'w-[260px]'}
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}
           lg:translate-x-0
-          flex flex-col shadow-2xl
+          flex flex-col border-r border-white/5 shrink-0
         `}
       >
         {/* Logo */}
-        <div className={`flex items-center gap-3 p-5 border-b border-white/10 ${isCollapsed ? 'justify-center' : ''}`}>
-          <div className="p-2 bg-accent/20 rounded-xl flex-shrink-0">
+        <Link 
+          href="/dashboard" 
+          className={`flex items-center gap-3 p-5 border-b border-white/5 transition-all hover:bg-white/5 ${isCollapsed ? 'justify-center' : ''}`}
+        >
+          <div className="p-2 bg-accent/15 rounded-xl flex-shrink-0 border border-accent/20">
             <Shield size={24} className="text-accent" />
           </div>
           {!isCollapsed && (
             <div>
-              <h1 className="text-lg font-bold">StaSentry</h1>
-              <p className="text-xs text-gray-400">Security System</p>
+              <h1 className="text-lg font-bold tracking-tight text-white">StaSentry</h1>
+              <p className="text-xs text-accent/80 uppercase tracking-widest font-semibold">Security System</p>
             </div>
           )}
-        </div>
+        </Link>
 
         {/* User Info */}
         {!isCollapsed && (
-          <div className="p-4 border-b border-white/10">
-            <p className="font-semibold text-sm truncate">{user.name}</p>
-            <p className="text-xs text-gray-400 capitalize">{user.role}</p>
+          <div className="p-4 border-b border-white/5 bg-white/3 backdrop-blur-sm m-3 rounded-2xl border border-white/5">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-primary font-bold text-sm">
+                {user?.name?.charAt(0).toUpperCase()}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="font-semibold text-sm text-white truncate">{user.name}</p>
+                <p className="text-xs text-gray-400 capitalize truncate">{user.role?.replace('_', ' ')}</p>
+              </div>
+            </div>
           </div>
         )}
 
@@ -592,10 +603,10 @@ export default function Sidebar() {
                 key={item.href}
                 href={item.href}
                 className={`
-                  flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all
+                  flex items-center gap-3 px-3 py-2.5 rounded-xl border transition-all duration-200
                   ${isActive 
-                    ? 'bg-accent/20 text-accent shadow-lg' 
-                    : 'hover:bg-white/10 text-gray-300 hover:text-white'
+                    ? 'bg-accent/10 border-accent/20 text-accent font-semibold' 
+                    : 'border-transparent text-gray-400 hover:bg-white/5 hover:text-white'
                   }
                   ${isCollapsed ? 'justify-center' : ''}
                 `}
@@ -612,18 +623,18 @@ export default function Sidebar() {
         </nav>
 
         {/* Footer */}
-        <div className="p-3 border-t border-white/10 space-y-2">
+        <div className="p-3 border-t border-white/5 space-y-2">
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="hidden lg:flex w-full items-center justify-center px-3 py-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-xl transition-all text-sm"
+            className="hidden lg:flex w-full items-center justify-center px-3 py-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all text-sm border border-transparent hover:border-white/5"
           >
             {isCollapsed ? '→' : '←'}
           </button>
           <button
             onClick={handleLogout}
             className={`
-              flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all
-              hover:bg-red-500/20 text-gray-300 hover:text-red-400 w-full
+              flex items-center gap-3 px-3 py-2.5 rounded-xl border border-transparent transition-all
+              hover:bg-red-500/10 hover:border-red-500/20 text-gray-400 hover:text-red-400 w-full
               ${isCollapsed ? 'justify-center' : ''}
             `}
             title={isCollapsed ? 'Logout' : ''}
@@ -637,7 +648,7 @@ export default function Sidebar() {
       {/* Overlay for mobile */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 lg:hidden"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
