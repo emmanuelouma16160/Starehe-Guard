@@ -697,7 +697,7 @@ export default function GuardPage() {
               <div className="grid gap-3">
                 <button
                   type="button"
-                  onClick={() => router.push('/incidents')}
+                  onClick={() => router.push('/dashboard/incidents')}
                   className="rounded-3xl border border-white/10 bg-white/5 px-4 py-4 text-left text-sm font-semibold text-white transition hover:border-accent hover:bg-white/10"
                 >
                   Report Incident
@@ -705,7 +705,7 @@ export default function GuardPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => router.push('/visitors')}
+                  onClick={() => router.push('/dashboard/visitors')}
                   className="rounded-3xl border border-white/10 bg-white/5 px-4 py-4 text-left text-sm font-semibold text-white transition hover:border-accent hover:bg-white/10"
                 >
                   Manage Visitors
@@ -713,7 +713,7 @@ export default function GuardPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => router.push('/reports')}
+                  onClick={() => router.push('/dashboard/reports')}
                   className="rounded-3xl border border-white/10 bg-white/5 px-4 py-4 text-left text-sm font-semibold text-white transition hover:border-accent hover:bg-white/10"
                 >
                   Submit Report
@@ -721,7 +721,7 @@ export default function GuardPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => router.push('/lockdown')}
+                  onClick={() => router.push('/dashboard/lockdown')}
                   className="rounded-3xl border border-white/10 bg-white/5 px-4 py-4 text-left text-sm font-semibold text-white transition hover:border-accent hover:bg-white/10"
                 >
                   Lockdown Status

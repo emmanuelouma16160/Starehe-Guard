@@ -337,7 +337,7 @@ export default function DashboardPage() {
           },
         ]
       : []),
-  ];
+  ], [role]);
 
   return (
     <>
