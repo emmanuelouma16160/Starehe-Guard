@@ -160,8 +160,8 @@ export default function DashboardPage() {
             bg: 'rgba(245, 158, 11, 0.1)',
           },
         ]
-      : [])
-  ],[role]);
+      : []),
+  ], [role]);
 
   return (
     <>
